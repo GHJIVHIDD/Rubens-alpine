@@ -13,7 +13,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-sudo apt install -y build-essential bc bison flex libssl-dev libncurses-dev \ gcc-aarch64-linux-gnu
+          sudo apt install -y build-essential bc bison flex libssl-dev libncurses-dev \ gcc-aarch64-linux-gnu
       - name: Fix mkbootimg tool (safe)
         run: |
           sudo apt update
