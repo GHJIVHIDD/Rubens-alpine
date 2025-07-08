@@ -13,8 +13,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential bc bison flex libssl-dev libncurses-dev \
-      - name: Fix mkbootimg tool (safe)
+sudo apt install -y build-essential bc bison flex libssl-dev libncurses-dev \ gcc-aarch64-linux-gnu
+      - mane: Fix mkbootimg tool
         run: |
           sudo apt update
           sudo apt install -y android-sdk-libsparse-utils
