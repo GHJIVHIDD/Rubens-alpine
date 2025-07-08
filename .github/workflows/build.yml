@@ -14,14 +14,16 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential bc bison flex libssl-dev libncurses-dev \
-
-      - name: install mkbootimg(AOSP)
+      - name: Install mkbootimg safely
         run: |
-          sudo  apt install -y android-sdk-libsparse-utils
-          if [ -f /usr/bin/mkbootimg ]; then
-            sudo ln -sf /usr/lib/android-sdk/mkbootimg /usr/local/bin/mkbootimg
-          fi
-
+          sudo apt update
+          sudo apt install -y android-sdk-libsparse-utils
+         if [ -f /usr/lib/android-sdk/mkbootimg ]; then
+          sudo ln -sf /usr/lib/android-sdk/mkbootimg /usr/local/bin/mkbootimg
+          sudo chmod +x /usr/local/bin/mkbootimg
+         elif [ -f /usr/bin/mkbootimg ]; then
+         sudo ln -sf /usr/bin/mkbootimg /usr/local/bin/mkbootimg
+         fi           
       - name: Fix mkbootimg tool
         run: |
           sudo apt remove mkbootimg -y || true
