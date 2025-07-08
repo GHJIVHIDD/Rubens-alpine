@@ -18,7 +18,9 @@ jobs:
       - name: install mkbootimg(AOSP)
         run: |
           sudo  apt install -y android-sdk-libsparse-utils
-          sudo ln -sf /usr/lib/android-sdk/mkbootimg /usr/local/bin/mkbootimg
+          if [ -f /usr/bin/mkbootimg ]; then
+            sudo ln -sf /usr/lib/android-sdk/mkbootimg /usr/local/bin/mkbootimg
+          fi
 
       - name: Fix mkbootimg tool
         run: |
