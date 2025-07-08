@@ -1,4 +1,3 @@
-
 #!/bin/bash
 set -e
 
@@ -35,9 +34,10 @@ static inline void enable_irq_wake_logging(int enable) {}
 #endif // _LINUX_WAKEUP_REASON_H
 EOF
 echo '✅ include/linux/wakeup_reason.h 已补全'
+
 echo '🩹 自动补全缺失头文件 trace/hooks/gic_v3.h...'
-mkdir -p trace/hooks
-cat > trace/hooks/gic_v3.h <<EOF
+mkdir -p kernel/trace/hooks
+cat > kernel/trace/hooks/gic_v3.h <<EOF
 #ifndef _TRACE_HOOK_GIC_V3_H
 #define _TRACE_HOOK_GIC_V3_H
 
@@ -65,3 +65,13 @@ if ! command -v mkbootimg >/dev/null; then
 fi
 mkbootimg --kernel kernel/arch/arm64/boot/Image --dtb "$DTB" --ramdisk ramdisk.cpio.gz \
   --base 0x00000000 --pagesize 4096 --cmdline 'console=ttyS0 root=/dev/ram0 init=/init rw' -o boot.img
+
+echo '🔍 检查构建过程中所有缺失的头文件引用...'
+grep -r --include='*.c' --include='*.h' '#include <' . | \
+  grep -v '"' | \
+  sed -n 's/.*#include <\(.*\)>/\1/p' | sort -u | \
+  while read hdr; do
+    if ! find . -type f -name "$(basename $hdr)" | grep -q .; then
+      echo "❌ 缺失头文件: <$hdr>"
+    fi
+  done
