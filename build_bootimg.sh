@@ -1,3 +1,4 @@
+
 #!/bin/bash
 set -e
 
@@ -18,6 +19,22 @@ echo "⚙️ 复制 .config..."
 cp .config kernel/.config
 
 cd kernel
+
+echo '🩹 自动补全缺失头文件 wakeup_reason.h...'
+mkdir -p include/linux
+cat > include/linux/wakeup_reason.h <<EOF
+#ifndef _LINUX_WAKEUP_REASON_H
+#define _LINUX_WAKEUP_REASON_H
+
+// Stub implementation for wakeup_reason.h
+// This is safe for build but doesn't do actual wakeup reason logging
+
+static inline void log_wakeup_reason(int irq) {}
+static inline void enable_irq_wake_logging(int enable) {}
+
+#endif // _LINUX_WAKEUP_REASON_H
+EOF
+echo '✅ include/linux/wakeup_reason.h 已补全'
 make ARCH=arm64 olddefconfig
 make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs
 cd ..
