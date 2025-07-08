@@ -1,0 +1,34 @@
+name: Build boot.img (mainline 5.10.209 + rubens)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential bc bison flex libssl-dev libncurses-dev \
+
+      - name: Fix mkbootimg tool
+        run: |
+          sudo apt remove mkbootimg -y || true
+          sudo wget -O /usr/local/bin/mkbootimg https://raw.githubusercontent.com/osm0sis/mkbootimg/master/mkbootimg
+          sudo chmod +x /usr/local/bin/mkbootimg
+            wget cpio curl git python3 mkbootimg xz-utils gcc-aarch64-linux-gnu
+
+      - name: Build boot.img
+        run: |
+          chmod +x build_bootimg.sh
+          ./build_bootimg.sh
+
+      - name: Upload boot.img
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot-img
+          path: boot.img
