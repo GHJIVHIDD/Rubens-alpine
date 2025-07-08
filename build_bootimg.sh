@@ -35,6 +35,18 @@ static inline void enable_irq_wake_logging(int enable) {}
 #endif // _LINUX_WAKEUP_REASON_H
 EOF
 echo '✅ include/linux/wakeup_reason.h 已补全'
+echo '🩹 自动补全缺失头文件 trace/hooks/gic_v3.h...'
+mkdir -p trace/hooks
+cat > trace/hooks/gic_v3.h <<EOF
+#ifndef _TRACE_HOOK_GIC_V3_H
+#define _TRACE_HOOK_GIC_V3_H
+
+// Stub for missing gic_v3.h trace hook
+// Allows build to continue, but tracing will not function
+
+#endif
+EOF
+echo '✅ trace/hooks/gic_v3.h 已补全'
 make ARCH=arm64 olddefconfig
 make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image dtbs
 cd ..
